@@ -3,8 +3,10 @@ import * as dotenv from "dotenv";
 import { config } from './config.js' 
 dotenv.config({ path:'.env' });
 
+const GOERLI_ALCHEMY_API = "https://eth-goerli.g.alchemy.com/v2/0GpX6RHzU_2m36RvdKBcNntI1nlYMool"
+const MAINNET_ALCHEMY_API = "https://eth-mainnet.g.alchemy.com/v2/n-6pAkIsUnF_xvvkeLzzeQboMbfNsJ8e"
 
-const rpc = config.network == 'mainnet' ?  process.env.MAINNET_ALCHEMY_API :  process.env.GOERLI_ALCHEMY_API
+const rpc = config.network == 'mainnet' ? MAINNET_ALCHEMY_API : GOERLI_ALCHEMY_API
 
 const privateKeys = config.network == 'mainnet' ? process.env.MAINNET_PRIVATE_KEY.split(',') : process.env.GOERLI_PRIVATE_KEY.split(',')
 
@@ -31,8 +33,8 @@ const sendTx = async (key) => {
   console.log('address: ', wallet.address)
   const contract = new ethers.Contract(config.address, config.abi, wallet)
 
-  // The name of the contract function to be called is changed to the name of the function you want to call
-  return contract.publicSaleMint(
+
+  return contract.purchase(
     ...config.args,
     {
       maxFeePerGas: config.maxFeePerGas,
